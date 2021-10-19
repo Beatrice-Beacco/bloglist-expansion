@@ -1,0 +1,10 @@
+PUT http://localhost:3003/api/blogs/615421f7b872f6f198211775
+Content-Type: application/json
+
+{
+    "title": "Cicciotto",
+    "author": "Panzerotto",
+    "url": "coolblog.net",
+    "likes": 0,
+    "id": "615421f7b872f6f198211775"
+}
