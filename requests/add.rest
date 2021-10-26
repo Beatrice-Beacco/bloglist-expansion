@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik51b3ZvbmUiLCJpZCI6IjYxNjk3M2IzZTI1YzFhYmJkZmQ2MjQ1ZCIsImlhdCI6MTYzNTI0NDE2Mn0.XXzyFbvMcauvBtOZiZMS8cZDMfAWf7UhARxMxRtU4zU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik51b3ZvbmUiLCJpZCI6IjYxNjk3M2IzZTI1YzFhYmJkZmQ2MjQ1ZCIsImlhdCI6MTYzNTI0OTYwNn0.VKJ5zQV6GgXPTo5GZF8lCON-U_zQFbe1RTGVtugzdXc
 
 {
     "title": "Blog Auth",

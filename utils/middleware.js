@@ -1,4 +1,5 @@
 const logger = require('./logger')
+const jwt = require('jsonwebtoken')
 
 //Middleware using the logger module to get infromation
 const requestLogger = (request, response, next) => {
@@ -39,9 +40,28 @@ const tokenExtractor = (request, response, next) => {
     next()
 }
 
+const userExtractor = (request, response, next) => {
+    const token = request.token
+
+    if (!token) {
+        return response.status(401).json({ error: 'missing token' })
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token is invalid' }).end()
+    } else {
+        request['user'] = decodedToken
+    }
+
+    next()
+}
+
 module.exports = {
     requestLogger,
     unknownEndpoint,
     errorHandler,
-    tokenExtractor
+    tokenExtractor,
+    userExtractor
 }
