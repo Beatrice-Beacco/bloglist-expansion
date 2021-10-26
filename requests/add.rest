@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik51b3ZvU2VjcmV0IiwiaWQiOiI2MTY5ODRiYjlkYTQyNzNlYTE2YWI1ZTkiLCJpYXQiOjE2MzQ1NzYyNzB9.9j-xfK4bHPeomR3A1mNAShHNAC1JVbE4fGnmUC5fq3I
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik51b3ZvU2VjcmV0IiwiaWQiOiI2MTY5ODRiYjlkYTQyNzNlYTE2YWI1ZTkiLCJpYXQiOjE2MzUyNDMwMzR9.JXmVjI1HrCPOUlyNil4tLSfvuy86TNPCGmIptQs365Y
 
 {
     "title": "Blog Auth",
     "author": "Idk lol",
     "url": "prova.net",
     "likes": 0
-}
+} 
