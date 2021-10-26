@@ -21,7 +21,7 @@ test('returned blogs', async () => {
         .get('/api/blogs')
         .expect(200)
         .expect('Content-Type', /application\/json/)
-    
+
     expect(response.body).toHaveLength(2)
     expect(response.body[0].id).toBeDefined()
 })
@@ -32,22 +32,37 @@ test('returned blogs', async () => {
 //Verifies that the length increased by 1 and that the name of the new author is present
 test('added blogs', async () => {
 
-    const oldDB = await api.get('/api/blogs')
+    newUser = {
+        username: "user",
+        name: "eh",
+        password: "password"
+    }
+
+    await api.post('/api/users').send(newUser)
+
+    const tokenRes = await api.post('/api/login').send(newUser)
+
+    const oldDB = await api.get('/api/blogs').set({ 'Authorization': 'bearer ' + tokenRes.body.token })
+
+    console.log(oldDB);
 
     const newBlog = {
-        name:"Cicciotto",
-        author:"Panzerotto",
-        likes:99,
-        link:"coolblog.com",
+        name: "Cicciotto",
+        author: "Panzerotto",
+        likes: 99,
+        link: "coolblog.com",
     }
 
     await api
         .post('/api/blogs')
+        .set({ 'Authorization': 'bearer ' + tokenRes.body.token })
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
-    const response = await api.get('/api/blogs')
+    const response = await api.get('/api/blogs').set({ 'Authorization': 'bearer ' + tokenRes.body.token })
+
+    console.log('Ma questo è un get', response.body);
 
     const names = response.body.map(r => r.author)
 
@@ -57,16 +72,16 @@ test('added blogs', async () => {
 
 //Gets the blogs with a get request, then checks every element
 //if likes is present checks it, otherwise creates a 0 likes attribute
- test('has likes', async () => {
+test('has likes', async () => {
     let blogs = await api
         .get('/api/blogs')
         .expect(200)
         .expect('Content-Type', /application\/json/)
 
     for (let blog of blogs.body) {
-        if(blog.likes){
-        expect(blog.likes).toBeDefined()
-        }  else {
+        if (blog.likes) {
+            expect(blog.likes).toBeDefined()
+        } else {
             blog.likes = 0
         }
     }
@@ -75,7 +90,17 @@ test('added blogs', async () => {
 ///Checks if name and the URL are defined
 test('new content', async () => {
 
-    const oldDB = await api.get('/api/blogs')
+    newUser = {
+        username: "user",
+        name: "eh",
+        password: "password"
+    }
+
+    await api.post('/api/users').send(newUser)
+
+    const tokenRes = await api.post('/api/login').send(newUser)
+
+    const oldDB = await api.get('/api/blogs').set({ 'Authorization': 'bearer ' + tokenRes.body.token })
 
     const newBlog = {
         name: "Cicciotto",
@@ -89,17 +114,18 @@ test('new content', async () => {
 
     await api
         .post('/api/blogs')
+        .set({ 'Authorization': 'bearer ' + tokenRes.body.token })
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
-    const response = await api.get('/api/blogs')
+    const response = await api.get('/api/blogs').set({ 'Authorization': 'bearer ' + tokenRes.body.token })
 
     const names = response.body.map(r => r.author)
 
     expect(response.body).toHaveLength(oldDB.body.length + 1)
     expect(names).toContain('Panzerotto')
-        
+
 })
 
 //Checks if name and URL are undefined
@@ -115,9 +141,9 @@ test('incomplete content', async () => {
     const blog = new Blog(newBlog)
 
     await api
-    .post('/api/blogs')
-    .send(blog)
-    .expect(400)
+        .post('/api/blogs')
+        .send(blog)
+        .expect(400)
 })
 
 //Deletes a single blog post
@@ -139,6 +165,21 @@ test('delete by id', async () => {
     const contents = blogsAtEnd.map(r => r.content)
 
     expect(contents).not.toContain(blogToDelete.content)
+})
+
+test('no token returns 401', async () => {
+    const newBlog = {
+        name: "Cicciotto",
+        author: "Panzerotto",
+        likes: 99,
+        link: "coolblog.com",
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(401)
+        .expect('Content-Type', /application\/json/)
 })
 
 afterAll(() => {
