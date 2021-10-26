@@ -7,8 +7,25 @@ const User = require('../models/user')
 
 //Deletes an entry based on the id
 blogsRouter.delete('/:id', async (request, response) => {
-    await Blog.findByIdAndRemove(request.params.id)
-    response.status(204).end()
+
+    const id = request.params.id
+    const token = request.token
+
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+
+    if (!token || !decodedToken.id) {
+        return response.status(401).json({ error: 'token missing or invalid' })
+    }
+
+    const blog = await Blog.findById(id)
+    const user = blog.users[0]
+
+    if (user == decodedToken.id) {
+        await Blog.findByIdAndRemove(id)
+        response.status(204).end()
+    } else {
+        response.status(401).json({ error: 'unauthorized access' }).end()
+    }
 })
 
 //Add new entries
